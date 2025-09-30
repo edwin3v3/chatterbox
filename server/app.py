@@ -1,7 +1,6 @@
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from flask_migrate import Migrate
-
 from models import db, Message
 
 app = Flask(__name__)
@@ -9,10 +8,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
-CORS(app)
-migrate = Migrate(app, db)
-
 db.init_app(app)
+migrate = Migrate(app, db)
+CORS(app)
 
 
 @app.route('/messages')
@@ -27,7 +25,6 @@ def create_message():
     new_message = Message(body=data['body'], username = data['username'])
     db.session.add(new_message)
     db.session.commit()
-
     return jsonify(new_message.to_dict()), 201
 
 # PATCH
@@ -48,4 +45,4 @@ def delete_messae(id):
     return '', 404
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)
