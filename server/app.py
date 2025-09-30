@@ -14,9 +14,11 @@ migrate = Migrate(app, db)
 
 db.init_app(app)
 
+
 @app.route('/messages')
 def messages():
-    return ''
+    messages = Message.query.order_by(Message.created_at.asc()).all()
+    return jsonify([message.to_dict() for message in messages]), 200
 
 @app.route('/messages/<int:id>')
 def messages_by_id(id):
