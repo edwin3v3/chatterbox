@@ -30,9 +30,14 @@ def create_message():
 
     return jsonify(new_message.to_dict()), 201
 
-@app.route('/messages/<int:id>')
-def messages_by_id(id):
-    return ''
+# PATCH
+@app.route('/messages/<int:id>', methods=['PATCH'])
+def update_message(id):
+    message = Message.query.get_or_404(id)
+    data = request.get_json()
+    message.body = data.get('body', message.body)
+    db.session.commit() 
+    return jsonify(message.to_dict()), 200
 
 if __name__ == '__main__':
     app.run(port=5555)
