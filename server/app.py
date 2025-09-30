@@ -20,6 +20,16 @@ def messages():
     messages = Message.query.order_by(Message.created_at.asc()).all()
     return jsonify([message.to_dict() for message in messages]), 200
 
+# post
+@app.route('/messages', methods = ['POST'])
+def create_message():
+    data = request.get_json()
+    new_message = Message(body=data['body'], username = data['username'])
+    db.session.add(new_message)
+    db.session.commit()
+
+    return jsonify(new_message.to_dict()), 201
+
 @app.route('/messages/<int:id>')
 def messages_by_id(id):
     return ''
